@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\Institution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,8 +14,15 @@ class CardController extends Controller
      */
     public function index()
     {
-        $cards = Card::orderBy('order')->get();
-        return view('cards.index', compact('cards'));
+        // Jika user admin, tampilkan cards management
+        if (session('admin_logged_in')) {
+            $cards = Card::orderBy('order')->get();
+            return view('cards.index', compact('cards'));
+        }
+        
+        // Jika public user, tampilkan institutions
+        $institutions = Institution::all();
+        return view('cards.index', compact('institutions'));
     }
 
     /**
@@ -81,7 +89,7 @@ class CardController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
+          
             if ($card->image && Storage::disk('public')->exists($card->image)) {
                 Storage::disk('public')->delete($card->image);
             }
@@ -93,9 +101,6 @@ class CardController extends Controller
         return redirect()->route('admin.cards')->with('success', 'Card berhasil diperbarui');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Card $card)
     {
         // Delete image if exists
