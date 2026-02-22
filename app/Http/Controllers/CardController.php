@@ -20,9 +20,8 @@ class CardController extends Controller
             return view('cards.index', compact('cards'));
         }
         
-        // Jika public user, tampilkan institutions
-        $institutions = Institution::all();
-        return view('cards.index', compact('institutions'));
+        // Jika public user, redirect ke institutions page
+        return redirect()->route('institutions.index');
     }
 
     /**
@@ -30,7 +29,8 @@ class CardController extends Controller
      */
     public function create()
     {
-        return view('cards.create');
+        $institutions = Institution::all();
+        return view('cards.create', compact('institutions'));
     }
 
     /**
@@ -46,6 +46,7 @@ class CardController extends Controller
             'url' => 'required|url',
             'order' => 'nullable|integer',
             'category' => 'required|in:internal,external',
+            'institution_id' => 'nullable|exists:institutions,id',
         ]);
 
         if ($request->hasFile('image')) {
@@ -70,7 +71,8 @@ class CardController extends Controller
      */
     public function edit(Card $card)
     {
-        return view('cards.edit', compact('card'));
+        $institutions = Institution::all();
+        return view('cards.edit', compact('card', 'institutions'));
     }
 
     /**
@@ -86,6 +88,7 @@ class CardController extends Controller
             'url' => 'required|url',
             'order' => 'nullable|integer',
             'category' => 'required|in:internal,external',
+            'institution_id' => 'nullable|exists:institutions,id',
         ]);
 
         if ($request->hasFile('image')) {

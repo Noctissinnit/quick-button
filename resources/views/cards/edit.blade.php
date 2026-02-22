@@ -63,6 +63,21 @@
                 </div>
 
                 <div class="mb-6">
+                    <label for="institution_id" class="block text-gray-700 font-medium mb-2">Institusi (Opsional)</label>
+                    <select id="institution_id" name="institution_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 @error('institution_id') border-red-500 @enderror">
+                        <option value="">-- Tidak Ada Institusi --</option>
+                        @foreach($institutions as $institution)
+                            <option value="{{ $institution->id }}" {{ old('institution_id', $card->institution_id) == $institution->id ? 'selected' : '' }}>
+                                {{ $institution->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('institution_id')
+                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="mb-6">
                     <label for="url" class="block text-gray-700 font-medium mb-2">URL Website *</label>
                     <input type="url" id="url" name="url" placeholder="https://example.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 @error('url') border-red-500 @enderror" value="{{ old('url', $card->url) }}" required>
                     @error('url')

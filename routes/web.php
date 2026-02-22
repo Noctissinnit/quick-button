@@ -8,6 +8,7 @@ use App\Http\Controllers\InstitutionController;
 // Public routes
 Route::get('/', [CardController::class, 'index'])->name('home');
 Route::get('/institutions', [InstitutionController::class, 'index'])->name('institutions.index');
+Route::get('/institutions/{institution}', [InstitutionController::class, 'show'])->name('institutions.show');
 
 // Test route to check users
 Route::get('/test/users', function () {

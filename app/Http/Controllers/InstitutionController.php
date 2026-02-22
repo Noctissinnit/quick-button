@@ -14,6 +14,13 @@ class InstitutionController extends Controller
         return view('institutions.index', compact('institutions'));
     }
 
+    // Public - Show institution detail with related cards
+    public function show(Institution $institution)
+    {
+        $cards = $institution->cards()->orderBy('order')->get();
+        return view('institutions.show', compact('institution', 'cards'));
+    }
+
     // Admin - List all institutions
     public function adminIndex()
     {
