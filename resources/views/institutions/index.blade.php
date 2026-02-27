@@ -15,7 +15,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($institutions as $institution)
                     <div class="group">
-                        <a href="{{ $institution->link }}" target="_blank" class="block bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition h-full">
+                        <a href="{{ route('institutions.show', $institution->id) }}" class="block bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition h-full">
                             <!-- Institution Card -->
                             <div class="bg-gradient-to-br from-blue-500 to-teal-500 h-40 flex items-center justify-center relative overflow-hidden">
                                 <div class="absolute inset-0 opacity-10">
@@ -35,9 +35,13 @@
                                     <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $institution->description }}</p>
                                 @endif
                                 
-                                <div class="flex items-center text-blue-600 font-semibold group-hover:translate-x-2 transition">
-                                    <span class="text-sm">Kunjungi</span>
-                                    <i class="fas fa-arrow-right ml-2"></i>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-500">
+                                        <i class="fas fa-link mr-1"></i> {{ $institution->cards->count() }} website
+                                    </span>
+                                    <div class="flex items-center text-blue-600 font-semibold group-hover:translate-x-2 transition">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </div>
                                 </div>
                             </div>
                         </a>
