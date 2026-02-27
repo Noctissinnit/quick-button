@@ -15,163 +15,108 @@ class CardSeeder extends Seeder
     public function run(): void
     {
         // Get institutions
-        $yayas = Institution::where('name', 'Yayasan Karya Bakti Surakarta')->first();
-        $politeknik = Institution::where('name', 'Politeknik ATMI')->first();
-        $ptAtmi = Institution::where('name', 'PT ATMI Solo')->first();
-        $ptIGI = Institution::where('name', 'PT IGI')->first();
-        $ptADE = Institution::where('name', 'PT ADE')->first();
-        $ptBizDec = Institution::where('name', 'PT BIZDEC')->first();
+        $ykbs = Institution::where('name', 'Yayasan Karya Bakti Surakarta')->first();
+        $poltek = Institution::where('name', 'Politeknik ATMI')->first();
+        $ptAtmiSolo = Institution::where('name', 'PT ATMI Solo')->first();
 
-        // Cards for Politeknik ATMI
-        Card::firstOrCreate(['title' => 'Sistem Informasi Akademik ATMI'], [
-            'description' => 'Portal akademik untuk manajemen nilai dan registrasi',
-            'icon' => 'fas fa-graduation-cap',
-            'url' => 'https://sia.atmi.ac.id',
-            'order' => 1,
-            'category' => 'internal',
-            'institution_id' => $politeknik?->id,
-        ]);
+        // Cards for YKBS
+        Card::truncate();
+        
+        $order = 1;
+        $ykbsLinks = [
+            'https://yayasankaryabakti.org/',
+            'https://fa.yayasankaryabakti.org/',
+            'https://ticket.yayasankaryabakti.org/',
+            'https://bookingroom.yayasankaryabakti.org/',
+            'https://invcom.atmicorp.com/',
+        ];
 
-        Card::firstOrCreate(['title' => 'Sistem Penerimaan Mahasiswa Baru'], [
-            'description' => 'Portal pendaftaran dan penerimaan mahasiswa baru',
-            'icon' => 'fas fa-user-plus',
-            'url' => 'https://pmb.atmi.ac.id',
-            'order' => 2,
-            'category' => 'external',
-            'institution_id' => $politeknik?->id,
-        ]);
+        foreach ($ykbsLinks as $url) {
+            Card::create([
+                'title' => basename(parse_url($url, PHP_URL_PATH), '/') ?: 'Link',
+                'description' => 'Link YKBS',
+                'icon' => 'fas fa-link',
+                'url' => $url,
+                'order' => $order++,
+                'category' => 'external',
+                'institution_id' => $ykbs?->id,
+            ]);
+        }
 
-        Card::firstOrCreate(['title' => 'Perpustakaan Digital'], [
-            'description' => 'Portal perpustakaan digital dan manajemen koleksi',
-            'icon' => 'fas fa-book',
-            'url' => 'https://perpus.atmi.ac.id',
-            'order' => 3,
-            'category' => 'internal',
-            'institution_id' => $politeknik?->id,
-        ]);
+        // Cards for POLTEK
+        $order = 1;
+        $poltekLinks = [
+            'https://atmi.ac.id/',
+            'https://atmi.ac.id/monik/',
+            'https://atmi.ac.id/news',
+            'https://lsp.atmi.ac.id/',
+            'https://e-learning.atmi.ac.id/',
+            'http://jobfair.atmi.ac.id/',
+            'https://careersworkshop.atmi.ac.id/',
+            'https://wisuda.atmi.ac.id/',
+            'https://studentaffair.atmi.ac.id/',
+            'https://spmi.atmi.ac.id/',
+            'https://finance.atmi.ac.id/',
+            'http://pm.atmi.ac.id/',
+            'https://rtm.atmi.ac.id/',
+            'https://tmi.atmi.ac.id/',
+            'https://tmk.atmi.ac.id/',
+            'https://tpm.atmi.ac.id/',
+            'https://trmk.atmi.ac.id/',
+            'https://imdec.atmi.ac.id/',
+            'https://publikasi.atmi.ac.id/',
+            'https://repository.atmi.ac.id/',
+            'https://journal.atmi.ac.id/',
+            'https://sapenagm.atmi.ac.id/',
+            'https://sipenarpm.atmi.ac.id/',
+            'https://sipenartm.atmi.ac.id/',
+            'https://manika.atmi.ac.id/',
+            'https://suratdigital.atmi.ac.id/',
+            'https://surattugasmahasiswa.atmi.ac.id/',
+            'https://atmipress.atmi.ac.id/',
+            'https://skmengajar.atmi.ac.id/',
+            'https://sbt.atmi.ac.id/',
+            'https://ujianspmb.atmi.ac.id/',
+            'https://lppm.atmi.ac.id/',
+            'https://penelitian.atmi.ac.id/',
+            'http://penghitungjam.atmi.online/',
+            'http://presensi.atmi.online/',
+        ];
 
-        // Cards for PT ATMI Solo
-        Card::firstOrCreate(['title' => 'Sistem Portal ATMI Solo'], [
-            'description' => 'Portal utama PT ATMI Solo',
-            'icon' => 'fas fa-globe',
-            'url' => 'https://pt-atmi.ac.id',
-            'order' => 1,
-            'category' => 'external',
-            'institution_id' => $ptAtmi?->id,
-        ]);
+        foreach ($poltekLinks as $url) {
+            Card::create([
+                'title' => basename(parse_url($url, PHP_URL_PATH), '/') ?: 'Link',
+                'description' => 'Link Politeknik ATMI',
+                'icon' => 'fas fa-link',
+                'url' => $url,
+                'order' => $order++,
+                'category' => 'external',
+                'institution_id' => $poltek?->id,
+            ]);
+        }
 
-        Card::firstOrCreate(['title' => 'Sistem Informasi Karyawan'], [
-            'description' => 'Platform manajemen data dan informasi karyawan',
-            'icon' => 'fas fa-users',
-            'url' => 'https://hris.pt-atmi.ac.id',
-            'order' => 2,
-            'category' => 'internal',
-            'institution_id' => $ptAtmi?->id,
-        ]);
+        // Cards for PT ATMI SOLO
+        $order = 1;
+        $ptAtmiSoloLinks = [
+            'https://finmon.atmi.co.id/',
+            'https://wp.atmi.co.id/',
+            'https://stockbar.atmi.co.id/',
+            'https://marketing.atmi.co.id/',
+            'https://surattugas.atmicorp.com/',
+            'https://siinas.atmicorp.com/',
+        ];
 
-        Card::firstOrCreate(['title' => 'Tata Kelola Aset'], [
-            'description' => 'Sistem manajemen dan tata kelola aset perusahaan',
-            'icon' => 'fas fa-boxes',
-            'url' => 'https://assets.pt-atmi.ac.id',
-            'order' => 3,
-            'category' => 'internal',
-            'institution_id' => $ptAtmi?->id,
-        ]);
-
-        // Cards for PT IGI
-        Card::firstOrCreate(['title' => 'Portal PT IGI'], [
-            'description' => 'Website resmi PT IGI',
-            'icon' => 'fas fa-globe',
-            'url' => 'https://pt-igi.ac.id',
-            'order' => 1,
-            'category' => 'external',
-            'institution_id' => $ptIGI?->id,
-        ]);
-
-        Card::firstOrCreate(['title' => 'Sistem Akademik IGI'], [
-            'description' => 'Platform akademik PT IGI',
-            'icon' => 'fas fa-graduation-cap',
-            'url' => 'https://akademik.pt-igi.ac.id',
-            'order' => 2,
-            'category' => 'internal',
-            'institution_id' => $ptIGI?->id,
-        ]);
-
-        // Cards for PT ADE
-        Card::firstOrCreate(['title' => 'Portal PT ADE'], [
-            'description' => 'Website resmi PT ADE',
-            'icon' => 'fas fa-globe',
-            'url' => 'https://pt-ade.ac.id',
-            'order' => 1,
-            'category' => 'external',
-            'institution_id' => $ptADE?->id,
-        ]);
-
-        Card::firstOrCreate(['title' => 'LMS PT ADE'], [
-            'description' => 'Learning Management System PT ADE',
-            'icon' => 'fas fa-chalkboard',
-            'url' => 'https://lms.pt-ade.ac.id',
-            'order' => 2,
-            'category' => 'internal',
-            'institution_id' => $ptADE?->id,
-        ]);
-
-        // Cards for PT BIZDEC
-        Card::firstOrCreate(['title' => 'Portal PT BIZDEC'], [
-            'description' => 'Website resmi PT BIZDEC',
-            'icon' => 'fas fa-globe',
-            'url' => 'https://pt-bizdec.ac.id',
-            'order' => 1,
-            'category' => 'external',
-            'institution_id' => $ptBizDec?->id,
-        ]);
-
-        Card::firstOrCreate(['title' => 'Sistem ERP BIZDEC'], [
-            'description' => 'Enterprise Resource Planning System',
-            'icon' => 'fas fa-server',
-            'url' => 'https://erp.pt-bizdec.ac.id',
-            'order' => 2,
-            'category' => 'internal',
-            'institution_id' => $ptBizDec?->id,
-        ]);
-
-        // Cards for Yayasan
-        Card::firstOrCreate(['title' => 'Portal Yayasan'], [
-            'description' => 'Website resmi Yayasan Karya Bakti Surakarta',
-            'icon' => 'fas fa-globe',
-            'url' => 'https://yayasan-karya-bakti.ac.id',
-            'order' => 1,
-            'category' => 'external',
-            'institution_id' => $yayas?->id,
-        ]);
-
-        // General cards without institution
-        Card::firstOrCreate(['title' => 'SIPENA'], [
-            'description' => 'Sistem Informasi Perencanaan Nasional',
-            'icon' => 'fas fa-chart-bar',
-            'url' => 'https://sipena.atmi.ac.id',
-            'order' => 1,
-            'category' => 'external',
-            'institution_id' => null,
-        ]);
-
-        Card::firstOrCreate(['title' => 'Aplikasi Surat Tugas'], [
-            'description' => 'Sistem pembuatan dan manajemen surat tugas',
-            'icon' => 'fas fa-file-alt',
-            'url' => 'https://tugasatmi.ac.id',
-            'order' => 2,
-            'category' => 'internal',
-            'institution_id' => null,
-        ]);
-
-        Card::firstOrCreate(['title' => 'ATMI Press'], [
-            'description' => 'Portal penerbitan dan publikasi karya ilmiah',
-            'icon' => 'fas fa-newspaper',
-            'url' => 'https://press.atmi.ac.id',
-            'order' => 3,
-            'category' => 'external',
-            'institution_id' => null,
-        ]);
+        foreach ($ptAtmiSoloLinks as $url) {
+            Card::create([
+                'title' => basename(parse_url($url, PHP_URL_PATH), '/') ?: 'Link',
+                'description' => 'Link PT ATMI Solo',
+                'icon' => 'fas fa-link',
+                'url' => $url,
+                'order' => $order++,
+                'category' => 'external',
+                'institution_id' => $ptAtmiSolo?->id,
+            ]);
+        }
     }
 }
 

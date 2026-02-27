@@ -69,7 +69,7 @@
                         <i class="fas fa-graduation-cap text-blue-600 text-lg"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold">Politeknik ATMI</h1>
+                        <h1 class="text-xl font-bold">Portal ATMI</h1>
                         <p class="text-sm text-blue-100">Surakarta</p>
                     </div>
                 </div>
