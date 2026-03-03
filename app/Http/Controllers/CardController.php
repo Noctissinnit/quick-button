@@ -42,20 +42,46 @@ class CardController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'icon' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'croppedImage' => 'nullable|string',
             'url' => 'required|url',
             'order' => 'nullable|integer',
             'category' => 'required|in:internal,external',
             'institution_id' => 'nullable|exists:institutions,id',
         ]);
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('cards', 'public');
+        // Handle cropped image
+        if ($request->has('croppedImage') && !empty($validated['croppedImage'])) {
+            $imagePath = $this->saveCroppedImage($validated['croppedImage']);
             $validated['image'] = $imagePath;
+            unset($validated['croppedImage']);
+        } else {
+            unset($validated['croppedImage']);
         }
 
         Card::create($validated);
         return redirect()->route('admin.cards')->with('success', 'Card berhasil ditambahkan');
+    }
+
+    /**
+     * Save cropped image from base64
+     */
+    private function saveCroppedImage($base64Image)
+    {
+        // Remove data:image/png;base64, prefix if exists
+        if (strpos($base64Image, 'data:image') === 0) {
+            $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
+        }
+
+        // Decode base64
+        $imageData = base64_decode($base64Image);
+
+        // Generate filename
+        $filename = uniqid() . '.png';
+
+        // Save to storage
+        Storage::disk('public')->put('cards/' . $filename, $imageData);
+
+        return 'cards/' . $filename;
     }
 
     /**
@@ -84,20 +110,25 @@ class CardController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'icon' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'croppedImage' => 'nullable|string',
             'url' => 'required|url',
             'order' => 'nullable|integer',
             'category' => 'required|in:internal,external',
             'institution_id' => 'nullable|exists:institutions,id',
         ]);
 
-        if ($request->hasFile('image')) {
-          
+        // Handle cropped image
+        if ($request->has('croppedImage') && !empty($validated['croppedImage'])) {
+            // Delete old image if exists
             if ($card->image && Storage::disk('public')->exists($card->image)) {
                 Storage::disk('public')->delete($card->image);
             }
-            $imagePath = $request->file('image')->store('cards', 'public');
+            
+            $imagePath = $this->saveCroppedImage($validated['croppedImage']);
             $validated['image'] = $imagePath;
+            unset($validated['croppedImage']);
+        } else {
+            unset($validated['croppedImage']);
         }
 
         $card->update($validated);

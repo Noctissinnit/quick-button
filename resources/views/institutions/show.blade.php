@@ -3,8 +3,15 @@
 @section('title', $institution->name)
 
 @section('content')
+    <!-- Institution Header with Image -->
+    @if($institution->image)
+        <div class="mb-8 bg-gray-100 rounded-lg overflow-hidden border border-gray-300 max-h-96 flex items-center justify-center">
+            <img src="{{ asset('storage/' . $institution->image) }}" alt="{{ $institution->name }}" class="w-full h-auto object-cover">
+        </div>
+    @endif
+
     <div class="mb-8">
-        <a href="{{ route('home') }}" class="text-blue-600 hover:underline mb-4 inline-block">
+        <a href="{{ route('institutions.index') }}" class="text-blue-600 hover:underline mb-4 inline-block">
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
         <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">{{ $institution->name }}</h1>

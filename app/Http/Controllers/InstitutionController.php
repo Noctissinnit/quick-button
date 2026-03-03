@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Institution;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class InstitutionController extends Controller
 {
@@ -41,7 +42,17 @@ class InstitutionController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'link' => 'required|url',
+            'croppedImage' => 'nullable|string',
         ]);
+
+        // Handle cropped image
+        if ($request->has('croppedImage') && !empty($validated['croppedImage'])) {
+            $imagePath = $this->saveCroppedImage($validated['croppedImage']);
+            $validated['image'] = $imagePath;
+            unset($validated['croppedImage']);
+        } else {
+            unset($validated['croppedImage']);
+        }
 
         Institution::create($validated);
 
@@ -62,7 +73,22 @@ class InstitutionController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'link' => 'required|url',
+            'croppedImage' => 'nullable|string',
         ]);
+
+        // Handle cropped image
+        if ($request->has('croppedImage') && !empty($validated['croppedImage'])) {
+            // Delete old image if exists
+            if ($institution->image && Storage::disk('public')->exists($institution->image)) {
+                Storage::disk('public')->delete($institution->image);
+            }
+            
+            $imagePath = $this->saveCroppedImage($validated['croppedImage']);
+            $validated['image'] = $imagePath;
+            unset($validated['croppedImage']);
+        } else {
+            unset($validated['croppedImage']);
+        }
 
         $institution->update($validated);
 
@@ -73,9 +99,36 @@ class InstitutionController extends Controller
     // Admin - Delete institution
     public function destroy(Institution $institution)
     {
+        // Delete image if exists
+        if ($institution->image && Storage::disk('public')->exists($institution->image)) {
+            Storage::disk('public')->delete($institution->image);
+        }
+        
         $institution->delete();
 
         return redirect()->route('admin.institutions.index')
             ->with('success', 'Institusi berhasil dihapus');
+    }
+
+    /**
+     * Save cropped image from base64
+     */
+    private function saveCroppedImage($base64Image)
+    {
+        // Remove data:image/png;base64, prefix if exists
+        if (strpos($base64Image, 'data:image') === 0) {
+            $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
+        }
+
+        // Decode base64
+        $imageData = base64_decode($base64Image);
+
+        // Generate filename
+        $filename = uniqid() . '.png';
+
+        // Save to storage
+        Storage::disk('public')->put('institutions/' . $filename, $imageData);
+
+        return 'institutions/' . $filename;
     }
 }

@@ -73,6 +73,16 @@
                         <p class="text-sm text-blue-100">Surakarta</p>
                     </div>
                 </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="{{ route('institutions.index') }}" class="text-blue-100 hover:text-white transition font-medium">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                  
+                    
+                </div>
+
                 <div class="flex items-center gap-4">
                     @if(session('admin_logged_in'))
                         <span class="text-blue-100">{{ session('admin_name') }} ({{ session('admin_username') }})</span>
